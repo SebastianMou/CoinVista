@@ -1,0 +1,58 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="row" style="color: white;">
+  <div class="col-8">
+    <div class="card" style="background-color: rgba(0, 0, 0, 0.342); box-shadow: 0 0 7px #00648bbd, 0 0 12px #00648bbd, 0 0 17px #00648bbd, 0 0 22px #00648bbd;">
+      <div class="card-body">
+        {% for bookmark in bookmakers %}
+          <a href="{% url 'detail_full' bookmark.uuid %}">
+            <h4>{{ bookmark.name }} - {{ bookmark.uuid }}</h4>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card" style="background-color: rgba(0, 0, 0, 0.342); box-shadow: 0 0 7px #00648bbd, 0 0 12px #00648bbd, 0 0 17px #00648bbd, 0 0 22px #00648bbd;">
+      <div class="card-body">
+        <h1>{{ user.username }}'s Profile</h1>
+        <p>Email: {{ user.email }}</p>
+        <p>Joined on: {{ user.date_joined }}</p>
+        <h2>Profile</h2>
+        <p>First name: {{ user.first_name }}</p>
+        <p>Last name: {{ user.last_name }}</p>
+        <p>Bio: {{ user.profile.bio }}</p>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          change
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST">
+          {% csrf_token %}
+          {{ user_form.as_p }}
+          {{ profile_form.as_p }}
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

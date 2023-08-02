@@ -1,0 +1,265 @@
+{% load static %}
+<div style="color: white;">
+    <div class="row">
+        <div class="col">
+            <h1>{{ name }}</h1>
+        </div>
+        <div class="col">
+            {% if saved %}
+                <form class="float-end" id="remove-coin-form" method="post" action="{% url 'remove_coin' pk=uuid %}">
+                    {% csrf_token %}
+                    <button class="btn btn-link" type="submit">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-check-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zm8.854-9.646a.5.5 0 0 0-.708-.708L7.5 7.793 6.354 6.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
+                          </svg>
+                    </button>
+                </form>
+            {% else %}
+                <form class="float-end" id="save-coin-form" method="post" action="{% url 'save_coin' pk=uuid %}">
+                    {% csrf_token %}
+                    <!-- Add hidden inputs for each field in the form -->
+                    <input type="hidden" name="uuid" value="{{ uuid }}">
+                    <input type="hidden" name="symbol" value="{{ symbol }}">
+                    <input type="hidden" name="name" value="{{ name }}">
+                    <!-- Add the rest of the fields in the same way -->
+                    <button class="btn btn-link" type="submit">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
+                            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                          </svg>
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+    </div> 
+    
+    <div style="padding-bottom: 12px;" class="row">
+        <div class="col">
+            <p>Symbol: {{ symbol }}</p>
+        </div>
+        <div class="col">
+            <p>Color: {{ color }}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col col-lg-2">
+            <img style="width: 10rem; height: auto;" src="{{ iconUrl }}" alt="{{ name }} icon">
+        </div>
+        <div class="col-8">
+            <p>Description: {{ description }}</p>
+            <p><a href="{{ websiteUrl }}">Website</a></p>
+        </div>
+    </div>
+    
+    <div id="myDiv"></div>
+
+    <div class="card" style="background-color: rgba(0, 0, 0, 0.342);">
+        <div class="card-body">
+            <div class="col">
+                <table class="table" style="color: #ffffff;">
+                    <thead>
+                        <tr>
+                            <th scope="col">Property</th>
+                            <th scope="col">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">24h Volume</th>
+                            <td>{{ 24hVolume }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Market Cap</th>
+                            <td>{{ marketCap }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Price</th>
+                            <td>{{ price }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">BTC Price</th>
+                            <td>{{ btcPrice }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Change</th>
+                            <td>{{ change }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Rank</th>
+                            <td>{{ rank }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Number of Markets</th>
+                            <td>{{ numberOfMarkets }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Number of Exchanges</th>
+                            <td>{{ numberOfExchanges }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Coinranking Page</th>
+                            <td><a href="{{ coinrankingUrl }}">Coinranking Link</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col">
+                <div class="row" style="color: #ffffff;">
+                    <div class="col">
+                        <!-- Display the links -->
+                        <h2>Links</h2>
+                        <ul>
+                            {% for link in links %}
+                            <li><a href="{{ link.url }}" style="color: #3a3dff;">{{ link.name }}</a> ({{ link.type }})</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="col">
+                        <!-- Display the supply data -->
+                        <h2>Supply</h2>
+                        <p>Confirmed: {{ supply.confirmed }}</p>
+                        <p>Circulating: {{ supply.circulating }}</p>
+                        <p>Total: {{ supply.total }}</p>
+                
+                        <!-- Display the all time high data -->
+                        <h2>All Time High</h2>
+                        <p>Price: {{ allTimeHigh.price }}</p>
+                
+                        <!-- <p>{{ sparkline }}</p> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+
+    <p>Timestamp: {{ allTimeHigh.timestamp|date:"F j, Y" }}</p>
+
+    <!-- Create a canvas element where the chart will be drawn -->
+    <canvas id="myChart"></canvas>
+</div>
+
+<!-- Include the Chart.js library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<script>
+
+    $(document).ready(function() {
+        $('#save-coin-form').on('submit', function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: "{% url 'save_coin' pk=uuid %}",
+                type: 'POST',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        alert('Coin saved successfully!');
+                    } else {
+                        alert('Error saving coin.');
+                    }
+                }
+            });
+        });
+        $('#remove-coin-form').on('submit', function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: "{% url 'remove_coin' pk=uuid %}",
+                type: 'POST',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        alert('Coin removed successfully!');
+                    } else {
+                        alert('Error removing coin.');
+                    }
+                }
+            });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const saveCoinForm = document.getElementById('save-coin-form');
+        const removeCoinForm = document.getElementById('remove-coin-form');
+        const saveMessage = document.getElementById('save-message');
+
+        saveCoinForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+            // Perform AJAX request to submit the form data
+            fetch(saveCoinForm.action, {
+                method: 'POST',
+                body: new FormData(saveCoinForm),
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json()) // Assuming the response is JSON
+            .then(data => {
+                // Display the save message
+                saveMessage.textContent = 'This coin has been saved.';
+            })
+            .catch(error => {
+                console.error('Error saving coin:', error);
+            });
+        });
+
+        removeCoinForm.addEventListener('submit', function(event) {
+            // You can implement the logic for removing the coin if needed
+        });
+    });
+
+
+    // Get the sparkline data from the Django context
+    var sparkline = {{ sparkline| safe }};
+
+    // Create a labels array with the same length as the sparkline data
+    var labels = Array.from({ length: sparkline.length }, (_, i) => i + 1);
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Price',
+                data: sparkline,
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        }
+    });
+
+    var trace1 = {
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Price',
+        x: Array.from({ length: sparkline.length }, (_, i) => i + 1),
+        y: sparkline,
+        line: { color: '#17BECF' }
+    };
+
+    var data = [trace1];
+
+    var layout = {
+        title: 'Price over Time',
+        xaxis: {
+            title: 'Time',
+            showgrid: false,
+            zeroline: false
+        },
+        yaxis: {
+            title: 'Price',
+            showline: false
+        },
+        showlegend: false
+    };
+
+    Plotly.newPlot('myDiv', data, layout);
+
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

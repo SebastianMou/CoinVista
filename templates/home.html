@@ -1,0 +1,58 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <div class="card" style="background-color: rgba(0, 0, 0, 0.342); box-shadow: 0 0 7px #00648bbd, 0 0 12px #00648bbd, 0 0 17px #00648bbd, 0 0 22px #00648bbd;">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th style="color: white;" scope="col">Img</th>
+                        <th style="color: white;" scope="col">Name</th>
+                        <th style="color: white;" scope="col">Price</th>
+                        <th style="color: white;" scope="col">Symbol</th>
+                        <th style="color: white;" scope="col">Market Cap</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for coin in coins %}
+                            <tr id="{{ coin.uuid }}">
+                                <td><img width="30" height="40" src="{{ coin.iconUrl }}" alt="" srcset=""></td>
+                                <td><small><a href="{% url 'detail_page' coin.uuid %}" style="text-decoration: none;color: #ffffff; text-shadow: 0 0 10px #00648bbd, 0 0 20px #00648bbd, 0 0 30px #00648bbd, 0 0 40px #00648bbd;"><b>{{ coin.name }}</b></a></small></td>
+                                <td><small style="color: #ffffff;">{{ coin.price }}</small></td>
+                                <td><small style="color: #ffffff;">{{ coin.symbol }}</small></td>
+                                <td><small style="color: #ffffff;">{{ coin.marketCap }}</small></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="card" style="background-color: rgba(0, 0, 0, 0.342);;e665; box-shadow: 0 0 7px #00648bbd, 0 0 12px #00648bbd, 0 0 17px #00648bbd, 0 0 22px #00648bbd;">
+            <div class="card-body detail-card-body">
+                <!-- AJAX data display page -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+      $("tr").click(function(event){
+        event.preventDefault();  // prevent the default action
+        var uuid = $(this).attr('id');
+        $.ajax({url: "/detail_page/" + uuid + "/", success: function(result){
+          $(".detail-card-body").html(result);
+        }});
+      });
+    });
+</script>
+    
+    
+
+{% endblock %}
