@@ -14,7 +14,7 @@ def home(request):
     querystring = {"referenceCurrencyUuid":"yhjMzLPhuIDl","timePeriod":"24h","tiers[0]":"1","orderBy":"marketCap","orderDirection":"desc","limit":"50","offset":"0"}
 
     headers = {
-        "X-RapidAPI-Key": "c08d086787msh739f2577cb5be6dp1562d2jsne92fba0598e2",
+        "X-RapidAPI-Key": "", # c08d086787msh739f2577cb5be6dp1562d2jsne92fba0598e2
         "X-RapidAPI-Host": "coinranking1.p.rapidapi.com"
     }
 
@@ -33,7 +33,7 @@ def home(request):
 
 def detail_page(request, pk):
     headers = {
-        "X-RapidAPI-Key": "d4e5ce3c5cmsh29e5df404ea0631p153ea1jsnc681364d7c7d",
+        "X-RapidAPI-Key": "", # d4e5ce3c5cmsh29e5df404ea0631p153ea1jsnc681364d7c7d
         "X-RapidAPI-Host": "coinranking1.p.rapidapi.com"
     }
 
@@ -79,7 +79,7 @@ def detail_page(request, pk):
 
 def detail_full(request, pk):
     headers = {
-        "X-RapidAPI-Key": "d4e5ce3c5cmsh29e5df404ea0631p153ea1jsnc681364d7c7d",
+        "X-RapidAPI-Key": "", # d4e5ce3c5cmsh29e5df404ea0631p153ea1jsnc681364d7c7d
         "X-RapidAPI-Host": "coinranking1.p.rapidapi.com"
     }
 
@@ -218,7 +218,7 @@ def test_endpoints(request):
     querystring = {"referenceCurrencyUuid":"yhjMzLPhuIDl"}
 
     headers = {
-        "X-RapidAPI-Key": "c08d086787msh739f2577cb5be6dp1562d2jsne92fba0598e2",
+        "X-RapidAPI-Key": "", # c08d086787msh739f2577cb5be6dp1562d2jsne92fba0598e2
         "X-RapidAPI-Host": "coinranking1.p.rapidapi.com"
     }
 
